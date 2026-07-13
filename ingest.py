@@ -29,7 +29,7 @@ DATA_DIR = "data"
 INDEX_PATH = os.path.join(DATA_DIR, "index.faiss")
 CHUNKS_PATH = os.path.join(DATA_DIR, "chunks.pkl")
 
-EMBED_MODEL = "models/text-embedding-004"
+EMBED_MODEL = "models/gemini-embedding-001"
 CHUNK_SIZE = 800       # characters per chunk
 CHUNK_OVERLAP = 150    # overlap so sentences at the boundary aren't lost
 
