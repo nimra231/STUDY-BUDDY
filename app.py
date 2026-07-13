@@ -28,12 +28,13 @@ st.set_page_config(page_title="Study Buddy", page_icon="📘", layout="wide", in
 # ---------------------------------------------------------------------------
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
     :root {
         --main: #1F3A32;
         --main-light: #2C5347;
         --accent: #C1531F;
+        --accent-glow: #E8935F;
         --text: #151512;
         --bg: #EDE6D6;
         --card: #FFFFFF;
@@ -43,56 +44,168 @@ st.markdown("""
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; color: var(--text); }
     h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif !important; color: var(--text) !important; }
 
-    .stApp { background-color: var(--bg); }
+    /* ---- animated gradient mesh background ---- */
+    .stApp {
+        background:
+            radial-gradient(circle at 15% 20%, rgba(31,58,50,0.16) 0%, transparent 45%),
+            radial-gradient(circle at 85% 15%, rgba(193,83,31,0.14) 0%, transparent 40%),
+            radial-gradient(circle at 50% 90%, rgba(31,58,50,0.10) 0%, transparent 50%),
+            var(--bg);
+        background-size: 200% 200%;
+        animation: meshMove 18s ease-in-out infinite;
+    }
+    @keyframes meshMove {
+        0%   { background-position: 0% 0%, 100% 0%, 50% 100%; }
+        50%  { background-position: 30% 30%, 70% 20%, 40% 80%; }
+        100% { background-position: 0% 0%, 100% 0%, 50% 100%; }
+    }
 
     section[data-testid="stSidebar"] {
         background: linear-gradient(180deg, var(--main) 0%, var(--main-light) 100%);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.15);
     }
     section[data-testid="stSidebar"] * { color: #F0EBDD !important; }
     section[data-testid="stSidebar"] h1 { color: #FFFFFF !important; }
 
     .stButton>button {
-        background-color: var(--main); color: white; border-radius: 10px;
-        border: none; padding: 0.55rem 1.3rem; font-weight: 600; font-family: 'Inter', sans-serif;
-        transition: background-color 0.15s ease;
+        background: linear-gradient(135deg, var(--main) 0%, var(--main-light) 100%);
+        color: white; border-radius: 12px;
+        border: none; padding: 0.6rem 1.4rem; font-weight: 600; font-family: 'Inter', sans-serif;
+        box-shadow: 0 4px 14px rgba(31,58,50,0.25);
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
     }
-    .stButton>button:hover { background-color: var(--accent); color: white; }
+    .stButton>button:hover {
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-glow) 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba(193,83,31,0.35);
+    }
+    .stButton>button:active { transform: translateY(0px) scale(0.98); }
 
+    /* ---- glassmorphism cards ---- */
     .card {
-        background: var(--card); border-radius: 18px; padding: 26px 28px;
-        box-shadow: 0 10px 26px rgba(31,58,50,0.08); margin-bottom: 22px;
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255,255,255,0.5);
+        border-radius: 20px; padding: 28px 30px;
+        box-shadow: 0 12px 32px rgba(31,58,50,0.10);
+        margin-bottom: 22px;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(31,58,50,0.16);
     }
 
     .metric-card {
-        background: var(--card); border-radius: 16px; padding: 20px 24px;
-        box-shadow: 0 8px 20px rgba(31,58,50,0.08); text-align:left;
+        background: rgba(255,255,255,0.75);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255,255,255,0.5);
+        border-radius: 18px; padding: 22px 24px;
+        box-shadow: 0 10px 26px rgba(31,58,50,0.10); text-align:left;
+        position: relative; overflow: hidden;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
-    .metric-value { font-family:'Space Grotesk',sans-serif; font-size:34px; font-weight:700; color:var(--main); }
-    .metric-label { font-size:13px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; font-weight:600; }
+    .metric-card::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: linear-gradient(90deg, var(--main), var(--accent));
+    }
+    .metric-card:hover {
+        transform: translateY(-5px) scale(1.015);
+        box-shadow: 0 16px 34px rgba(31,58,50,0.18);
+    }
+    .metric-value {
+        font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700;
+        background: linear-gradient(135deg, var(--main), var(--main-light));
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .metric-label { font-size:12.5px; color:var(--muted); letter-spacing:1.2px; text-transform:uppercase; font-weight:600; }
 
     .pill {
-        display:inline-block; background: var(--main); color:white !important; font-size:12px;
-        padding:4px 12px; border-radius:100px; margin:2px 4px 2px 0; font-weight:500;
+        display:inline-block;
+        background: linear-gradient(135deg, var(--main), var(--main-light));
+        color:white !important; font-size:12px;
+        padding:5px 14px; border-radius:100px; margin:3px 6px 3px 0; font-weight:500;
+        box-shadow: 0 3px 10px rgba(31,58,50,0.25);
     }
-    .pill-accent { background: var(--accent); }
+    .pill-accent { background: linear-gradient(135deg, var(--accent), var(--accent-glow)); }
 
     .citation-box {
-        background:#F5F0E4; border-left: 4px solid var(--accent); padding:10px 16px;
-        border-radius:8px; font-size:13px; color:var(--muted); margin-top:10px;
+        background: rgba(245,240,228,0.85);
+        backdrop-filter: blur(8px);
+        border-left: 4px solid var(--accent); padding:12px 18px;
+        border-radius:10px; font-size:13px; color:var(--muted); margin-top:10px;
     }
 
     .weak-row {
-        background: var(--card); border-left: 5px solid var(--accent); padding:14px 18px;
-        border-radius:10px; margin-bottom:10px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        background: rgba(255,255,255,0.75);
+        backdrop-filter: blur(10px);
+        border-left: 5px solid var(--accent); padding:14px 18px;
+        border-radius:12px; margin-bottom:10px; box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+        transition: transform 0.2s ease;
     }
+    .weak-row:hover { transform: translateX(4px); }
     .strong-row {
-        background: var(--card); border-left: 5px solid var(--main); padding:14px 18px;
-        border-radius:10px; margin-bottom:10px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        background: rgba(255,255,255,0.75);
+        backdrop-filter: blur(10px);
+        border-left: 5px solid var(--main); padding:14px 18px;
+        border-radius:12px; margin-bottom:10px; box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+        transition: transform 0.2s ease;
+    }
+    .strong-row:hover { transform: translateX(4px); }
+
+    div[data-testid="stFileUploader"] {
+        background: rgba(255,255,255,0.65); backdrop-filter: blur(10px);
+        border-radius:16px; padding:12px; border: 1.5px dashed rgba(31,58,50,0.25);
     }
 
-    div[data-testid="stFileUploader"] { background:var(--card); border-radius:14px; padding:10px; }
+    /* ---- hero banner with floating 3D logo ---- */
+    .hero-wrap {
+        display:flex; align-items:center; gap:22px;
+        padding: 26px 32px; border-radius: 22px; margin-bottom: 28px;
+        background: linear-gradient(135deg, rgba(31,58,50,0.92) 0%, rgba(44,83,71,0.92) 100%);
+        box-shadow: 0 16px 40px rgba(31,58,50,0.28);
+        position: relative; overflow: hidden;
+    }
+    .hero-wrap::after {
+        content:''; position:absolute; top:-40%; right:-10%; width:220px; height:220px;
+        background: radial-gradient(circle, rgba(193,83,31,0.35) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+    .hero-logo {
+        width: 64px; height: 64px; border-radius: 18px; flex-shrink: 0;
+        background: linear-gradient(145deg, var(--accent), var(--accent-glow));
+        display:flex; align-items:center; justify-content:center;
+        font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:26px; color:white;
+        box-shadow:
+            0 10px 20px rgba(193,83,31,0.4),
+            inset 0 2px 4px rgba(255,255,255,0.3),
+            inset 0 -3px 6px rgba(0,0,0,0.2);
+        transform: perspective(400px) rotateY(-8deg) rotateX(4deg);
+        animation: floatY 4s ease-in-out infinite;
+    }
+    @keyframes floatY {
+        0%, 100% { transform: perspective(400px) rotateY(-8deg) rotateX(4deg) translateY(0px); }
+        50% { transform: perspective(400px) rotateY(8deg) rotateX(-2deg) translateY(-6px); }
+    }
+    .hero-title { color:#FFFFFF; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:26px; margin:0; position:relative; z-index:2; }
+    .hero-sub { color:#C9D6CE; font-size:14px; margin-top:4px; position:relative; z-index:2; }
 </style>
 """, unsafe_allow_html=True)
+
+
+def hero_banner(title: str, subtitle: str):
+    """A glassy gradient hero banner with a floating 3D-tilted logo mark."""
+    st.markdown(f"""
+    <div class="hero-wrap">
+        <div class="hero-logo">NI</div>
+        <div>
+            <p class="hero-title">{title}</p>
+            <p class="hero-sub">{subtitle}</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 def init_gemini():
@@ -137,8 +250,7 @@ stats = tracker.get_stats_by_source()
 # PAGE: DASHBOARD
 # ---------------------------------------------------------------------------
 if page == "🏠 Dashboard":
-    st.title("Dashboard")
-    st.caption("Where things stand right now.")
+    hero_banner("Dashboard", "Where things stand right now.")
 
     total_attempts = sum(s["attempts"] for s in stats)
     total_correct = sum(s["correct"] for s in stats)
@@ -175,8 +287,7 @@ if page == "🏠 Dashboard":
 # PAGE: STUDY
 # ---------------------------------------------------------------------------
 elif page == "📥 Study":
-    st.title("Study")
-    st.caption("Upload your notes, then ask anything about them.")
+    hero_banner("Study", "Upload your notes, then ask anything about them.")
 
     st.markdown("#### Add material")
     uploaded_file = st.file_uploader(
@@ -219,8 +330,7 @@ elif page == "📥 Study":
 # PAGE: QUIZ ME
 # ---------------------------------------------------------------------------
 elif page == "📝 Quiz Me":
-    st.title("Quiz Me")
-    st.caption("Active recall beats re-reading. Test yourself.")
+    hero_banner("Quiz Me", "Active recall beats re-reading. Test yourself.")
 
     if not sources:
         st.info("Upload a document on the Study page before generating a quiz.")
@@ -279,8 +389,7 @@ elif page == "📝 Quiz Me":
 # PAGE: PROGRESS
 # ---------------------------------------------------------------------------
 elif page == "📊 Progress":
-    st.title("Progress")
-    st.caption("What you actually know vs. what needs another pass.")
+    hero_banner("Progress", "What you actually know vs. what needs another pass.")
 
     if not stats:
         st.info("Take a quiz first — this fills in once you have real results.")
