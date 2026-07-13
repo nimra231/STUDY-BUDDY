@@ -14,7 +14,7 @@ import numpy as np
 import google.generativeai as genai
 from ingest import load_index, EMBED_MODEL
 
-ANSWER_MODEL = "models/gemini-1.5-flash"
+ANSWER_MODEL = "models/gemini-flash-latest"
 TOP_K = 4  # how many chunks to retrieve per question
 
 
