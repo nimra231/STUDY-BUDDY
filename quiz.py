@@ -11,8 +11,7 @@ import re
 import google.generativeai as genai
 from ingest import load_index
 
-QUIZ_MODEL = "models/gemini-1.5-flash"
-
+QUIZ_MODEL = "models/gemini-flash-latest"
 
 def get_text_for_source(source_name: str) -> str:
     """Pulls all chunk text belonging to one uploaded document, stitched back together."""
